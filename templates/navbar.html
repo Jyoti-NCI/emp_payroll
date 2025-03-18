@@ -4,6 +4,9 @@
         <a class="nav-link text-dark fw-bold" href="{% url 'payroll:allemployees' %}">Home</a>
         <a class="nav-link text-dark fw-bold" href="{% url 'payroll:allemployees' %}">All Employees</a>
         <a class="nav-link text-dark fw-bold" href="{% url 'payroll:addemployee' %}">Add Employee</a>
+        {% if user.is_superuser %}
+          <a class="nav-link text-dark fw-bold" href="/admin/">Admin</a>  
+        {% endif %}
       {% endif %}
     </nav>
     
