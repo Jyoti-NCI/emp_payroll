@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block content %}
+    <h4 class="text-center">Update Employee Details</h4>
+    <div class="card p-3 bg-light">
+        <form action="/doupdateemployee/{{singleemp.id}}/" method="POST" enctype="multipart/form-data" onsubmit="return validateEmployeeForm()">
+            {% csrf_token %}
+            <div class="mb-2">
+                <label for="employeeid" class="form-label">Employee Id</label>
+                <input type="text" class="form-control" placeholder="Enter the employee id" 
+                name="employeeid" value="{{singleemp.employeeid}}" readonly>
+            </div>
+            <div class="mb-2">
+                <label for="employeename" class="form-label">Name</label>
+                <input type="text" class="form-control" placeholder="Enter the name" 
+                name="employeename" value="{{singleemp.employeename}}" required oninput="validateField(this)">
+                <small class="text-danger" id="employeenameError"></small>
+            </div>
+            <div class="mb-2">
+                <label for="employeeemail" class="form-label">Email</label>
+                <input type="email" class="form-control" placeholder="Enter the email" 
+                name="employeeemail" value="{{singleemp.email}}" required oninput="validateEmail(this)">
+                <small class="text-danger" id="employeeemailError"></small>
+            </div>
+            <div class="mb-2">
+                <label for="employeeDOB" class="form-label">DOB</label>
+                <input type="date" class="form-control" placeholder="Enter the birthdate" 
+                name="employeeDOB" value="{{ singleemp.DOB|default:''|date:'Y-m-d' }}" readonly>
+            </div> 
+            <div class="mb-2">
+                <label for="employeephone" class="form-label">Phone</label>
+                <input type="text" class="form-control" placeholder="Enter the phone number" 
+                name="employeephone" value="{{singleemp.phone}}" required oninput="validateField(this)">
+            </div>   
+            <!-- Base Salary Input -->
+            <div class="mb-2">
+                <label for="baseSalary" class="form-label">Base Salary</label>
+                <input type="number" class="form-control" id="baseSalary" name="baseSalary" placeholder="Enter base salary" value="{{ singleemp.base_salary }}" oninput="validateField(this)">
+                <small class="text-danger" id="baseSalaryError"></small>
+            </div>
+            <!-- Bonus Input -->
+            <div class="mb-2">
+                <label for="bonus" class="form-label">Bonus</label>
+                <input type="number" class="form-control" id="bonus" name="bonus" placeholder="Enter bonus" value="{{ singleemp.bonus }}">
+            </div>
+            <!-- Deductions Input -->
+            <div class="mb-2">
+                <label for="deductions" class="form-label">Deductions</label>
+                <input type="number" class="form-control" id="deductions" name="deductions" placeholder="Enter deductions" value="{{ singleemp.deductions }}">
+            </div>
+            <!-- Button to Recalculate Salary -->
+            <div class="mb-2">
+                <button type="button" class="btn btn-primary" id="recalculateSalaryBtn">Recalculate Salary</button>
+            </div>
+            <!-- Total Salary (Readonly) -->
+            <div class="mb-2">
+                <label for="employeesalary" class="form-label">Total Salary</label>
+                <input type="number" class="form-control" id="employeesalary" name="employeesalary" value="{{ singleemp.salary }}" readonly>
+            </div>
+            <!-- Employee Image Upload -->
+            <div class="mb-2">
+                <label for="employeeimage" class="form-label">Employee Image</label>
+                <input type="file" class="form-control" name="image">
+            </div>
+            {% if singleemp.image %}
+            <div class="mb-2">
+                <label class="form-label">Current Image:</label><br>
+                <img src="{{ singleemp.image.url }}" alt="Employee Image" width="150">
+            </div>
+            {% endif %}
+            <!-- Update Button -->
+            <div class="container text-center mt-2">
+                <button type="submit" class="btn btn-sm btn-outline-warning fw-bold">Update</button>
+            </div>
+        </form>
+    </div>
+    
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("JavaScript is loaded!");
+
+    let recalculateButton = document.getElementById("recalculateSalaryBtn");
+    if (recalculateButton) {
+        recalculateButton.addEventListener("click", function () {
+            console.log("Recalculate Salary button clicked!");
+            calculateSalary();
+        });
+    } else {
+        console.error("Recalculate Salary button not found!");
+    }
+});
+
+function calculateSalary() {
+    let baseSalaryInput = document.getElementById("baseSalary");
+    let bonusInput = document.getElementById("bonus");
+    let deductionsInput = document.getElementById("deductions");
+    let salaryInput = document.getElementById("employeesalary");
+
+    if (!baseSalaryInput || !bonusInput || !deductionsInput || !salaryInput) {
+        console.error("One or more salary input fields are missing.");
+        return;
+    }
+
+    let baseSalary = parseFloat(baseSalaryInput.value) || 0;
+    let bonus = parseFloat(bonusInput.value) || 0;
+    let deductions = parseFloat(deductionsInput.value) || 0;
+
+    let totalSalary = baseSalary + bonus - deductions;
+    console.log(`Base: ${baseSalary}, Bonus: ${bonus}, Deductions: ${deductions}, Total: ${totalSalary}`);
+
+    salaryInput.value = totalSalary.toFixed(2);
+}
+</script>
+{% endblock content %}

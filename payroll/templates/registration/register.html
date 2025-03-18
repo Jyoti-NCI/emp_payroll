@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center vh-20">
+    <div class="card p-4 shadow-lg" style="width: 600px;">
+        <h3 class="text-center">Register</h3>
+
+        <!-- Display Django Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" id="registerForm">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" id="username" name="username" class="form-control text-center" required>
+                <small class="text-danger" id="usernameError"></small>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" name="email" class="form-control text-center" required>
+                <small class="text-danger" id="emailError"></small>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" id="password" name="password1" class="form-control text-center" required>
+                <small class="text-danger" id="passwordError"></small>
+            </div>
+
+            <div class="mb-3">
+                <label for="password_confirmation" class="form-label">Confirm Password:</label>
+                <input type="password" id="password_confirmation" name="password2" class="form-control text-center" required>
+                <small class="text-danger" id="password_confirmationError"></small>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Register</button>
+        </form>
+
+        <div class="text-center mt-3">
+            Already have an account? <a href="{% url 'payroll:login' %}">Login here</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

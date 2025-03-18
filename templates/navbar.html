@@ -1,0 +1,27 @@
+<div class="header d-flex justify-content-between bg-light">
+    <nav class="nav">
+      {% if user.is_authenticated %}
+        <a class="nav-link text-dark fw-bold" href="{% url 'payroll:allemployees' %}">Home</a>
+        <a class="nav-link text-dark fw-bold" href="{% url 'payroll:allemployees' %}">All Employees</a>
+        <a class="nav-link text-dark fw-bold" href="{% url 'payroll:addemployee' %}">Add Employee</a>
+      {% endif %}
+    </nav>
+    
+    <ul class="nav justify-content-end align-items-center">
+      {% if user.is_authenticated %}
+      <li class="nav-item">
+        <span class="nav-link text-dark fw-bold">Logged in as {{ user.username }}</span>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark fw-bold" href="{% url 'payroll:logout' %}">Logout</a>
+      </li>
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link text-dark fw-bold" href="{% url 'payroll:register' %}">Register</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark fw-bold" href="{% url 'payroll:login' %}">Login</a>
+      </li>
+      {% endif %}
+    </ul>
+</div>

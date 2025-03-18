@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+    <h4 class="text-center">All Employee Page</h4>
+    <div class="container card">
+        <h5 class="text-decoration-underline">List Of Employees</h5>
+        <div>
+            <table class="table text-center">
+                <thead>
+                  <tr>
+                    <th scope="col">Employee ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">DOB</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Salary</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% if allemployees %}
+                    {% for eachemployee in allemployees %}
+                  <tr>
+                    <td>{{ eachemployee.employeeid }}</td>
+                    <td>{{ eachemployee.employeename }}</td>
+                    <td>{{ eachemployee.email }}</td>
+                    <td>{{ eachemployee.DOB }}</td>
+                    <td>{{ eachemployee.phone }}</td>
+                    <td>${{ eachemployee.salary }}</td> 
+                    <td>
+                      {% if eachemployee.image %}
+                        <img src="{{ eachemployee.image }}" alt="Employee Image" width="100">
+                      {% else %}
+                        No Image
+                      {% endif %}
+                    </td>
+                    <td><a href="{% url 'payroll:updateemployee' eachemployee.id %}" class="btn btn-sm btn-warning">Update</a>
+                    <a href="{% url 'payroll:deleteemployee' eachemployee.id %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}
+                </tbody>
+              </table>
+        </div>
+    </div>
+{% endblock content %}
+   

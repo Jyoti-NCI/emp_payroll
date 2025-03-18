@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    <h4 class="text-center">Employee Details</h4>
+    <div class="card p-3 bg-light">
+        <p><strong>Employee ID:</strong> {{ singleemp.employeeid }}</p>
+        <p><strong>Name:</strong> {{ singleemp.employeename }}</p>
+        <p><strong>Email:</strong> {{ singleemp.email }}</p>
+        <p><strong>DOB:</strong> {{ singleemp.DOB }}</p>
+        <p><strong>Phone:</strong> {{ singleemp.phone }}</p>
+        <p><strong>Salary:</strong> ${{ singleemp.salary }}</p>
+        <div class="container text-center mt-2">
+            <a href="/updateemployee/{{ singleemp.id }}" class="btn btn-warning">Edit</a>
+            <a href="/allemployees" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+{% endblock content %}

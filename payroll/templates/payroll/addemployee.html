@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block content %}
+    <h4 class="text-center">Add New Employee</h4>
+    <div class="card p-3 bg-light">
+        <form action="/addemployee/" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <div class="mb-2">
+                <label for="employeeid" class="form-label">Employee Id</label>
+                <input type="text" class="form-control" id="employeeid" placeholder="Enter the employee id" name="employeeid" required pattern="^[0-9]{1,5}$" title="Employee ID must be only numeric and 1-5 digits long." oninput="validateField(this)">
+                <small class="text-danger" id="employeeidError"></small>
+            </div>
+            <div class="mb-2">
+                <label for="employeename" class="form-label">Name</label>
+                <input type="text" class="form-control" id="employeename" placeholder="Enter the name" name="employeename" required pattern="^[A-Za-z ]{3,50}$" title="Name must be alphabetic and 3-50 characters long." oninput="validateField(this)">
+                <small class="text-danger" id="employeenameError"></small>
+            </div>
+            <div class="mb-2">
+                <label for="employeeemail" class="form-label">Email</label>
+                <input type="email" class="form-control" id="employeeemail" placeholder="Enter the email" name="employeeemail" required oninput="validateEmail()">
+                <small class="text-danger" id="employeeemailError"></small>
+            </div>
+            <div class="mb-2">
+                <label for="employeeDOB" class="form-label">DOB</label>
+                <input type="date" class="form-control" id="employeeDOB" name="employeeDOB" required oninput="validateDOB()">
+                <small class="text-danger" id="employeeDOBError"></small>
+            </div> 
+            <div class="mb-2">
+                <label for="employeephone" class="form-label">Phone</label>
+                <input type="tel" class="form-control" id="employeephone" placeholder="Enter the phone number" name="employeephone" required pattern="^[0-9]{10}$" title="Phone number must be 10 digits." oninput="validateField(this)">
+                <small class="text-danger" id="employeephoneError"></small>
+            </div>  
+            
+            <!-- Salary Calculation Section -->
+            <div class="mb-2">
+                <label for="baseSalary" class="form-label">Base Salary</label>
+                <input type="number" class="form-control" id="baseSalary" placeholder="Enter base salary" required min="1000" title="Base salary must be at least 1000." oninput="validateField(this)">
+                <small class="text-danger" id="baseSalaryError"></small>
+            </div>
+            <div class="mb-2">
+                <label for="bonus" class="form-label">Bonus</label>
+                <input type="number" class="form-control" id="bonus" placeholder="Enter bonus amount" min="0" oninput="validateField(this)">
+            </div>
+            <div class="mb-2">
+                <label for="deductions" class="form-label">Deductions</label>
+                <input type="number" class="form-control" id="deductions" placeholder="Enter deductions" min="0" oninput="validateField(this)">
+            </div>
+            <div class="mb-2">
+                <button type="button" class="btn btn-primary" onclick="calculateSalary()">Calculate Salary</button>
+            </div>
+            <div class="mb-2">
+                <label for="employeesalary" class="form-label">Total Salary</label>
+                <input type="number" class="form-control" id="employeesalary" name="employeesalary" readonly required>
+            </div>
+            <div class="mb-2">
+                <label for="employeeimage" class="form-label">Employee Image</label>
+                <input type="file" class="form-control" id="image" name="image" required>
+            </div>
+            <div class="container text-center mt-2">
+                <button type="submit" class="btn btn-sm btn-outline-success fw-bold">Add Employee</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function validateField(input) {
+            let errorElement = document.getElementById(input.id + "Error");
+            if (!input.checkValidity()) {
+                errorElement.innerText = input.title;
+            } else {
+                errorElement.innerText = "";
+            }
+        }
+
+        function validateEmail() {
+            let emailInput = document.getElementById("employeeemail");
+            let errorElement = document.getElementById("employeeemailError");
+            let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!emailPattern.test(emailInput.value)) {
+                errorElement.innerText = "Please enter a valid email address (e.g., user@example.com).";
+                emailInput.setCustomValidity("Invalid email format");
+            } else {
+                errorElement.innerText = "";
+                emailInput.setCustomValidity("");
+            }
+        }
+
+        function validateDOB() {
+            let dobInput = document.getElementById("employeeDOB");
+            let errorElement = document.getElementById("employeeDOBError");
+            let dob = new Date(dobInput.value);
+            let today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            let monthDiff = today.getMonth() - dob.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+
+            if (age < 22) {
+                errorElement.innerText = "Employee must be at least 22 years old.";
+                dobInput.setCustomValidity("Invalid age");
+            } else {
+                errorElement.innerText = "";
+                dobInput.setCustomValidity("");
+            }
+        }
+
+        function calculateSalary() {
+            let baseSalary = parseFloat(document.getElementById("baseSalary").value) || 0;
+            let bonus = parseFloat(document.getElementById("bonus").value) || 0;
+            let deductions = parseFloat(document.getElementById("deductions").value) || 0;
+
+            let totalSalary = baseSalary + bonus - deductions;
+            document.getElementById("employeesalary").value = totalSalary.toFixed(2);
+        }
+
+        function validateForm() {
+            let fields = ["employeeid", "employeename", "employeeemail", "employeeDOB", "employeephone", "baseSalary"];
+            let isValid = true;
+
+            fields.forEach(function (field) {
+                let input = document.getElementById(field);
+                if (!input.checkValidity()) {
+                    validateField(input);
+                    isValid = false;
+                }
+            });
+
+            validateEmail();
+            if (!document.getElementById("employeeemail").checkValidity()) {
+                isValid = false;
+            }
+
+            validateDOB();
+            if (!document.getElementById("employeeDOB").checkValidity()) {
+                isValid = false;
+            }
+
+            return isValid;
+        }
+    </script>
+{% endblock content %}
