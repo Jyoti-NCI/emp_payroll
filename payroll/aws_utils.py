@@ -35,9 +35,9 @@ cloudwatch_client = boto3.client(
     aws_session_token=AWS_SESSION_TOKEN,
 )
 # Initialize AWS Clients
-s3_client = boto3.client("s3")
+"""s3_client = boto3.client("s3")
 sns_client = boto3.client("sns")
-cloudwatch_client = boto3.client("logs")
+cloudwatch_client = boto3.client("logs")"""
 
 def upload_image_to_s3(image_file):
     """
