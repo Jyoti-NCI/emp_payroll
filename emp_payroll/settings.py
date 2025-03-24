@@ -27,7 +27,8 @@ SECRET_KEY = 'django-insecure-7f*28e(^#gpb(=!=i83w9f^-)hab62d%^77#avvbhi%x=hh(y8
 DEBUG = True
 
 ALLOWED_HOSTS = ['3.250.52.149',
-    '671dd204b08444d990fc638003860ff1.vfs.cloud9.eu-west-1.amazonaws.com']
+    '671dd204b08444d990fc638003860ff1.vfs.cloud9.eu-west-1.amazonaws.com',
+    '54.75.212.66']
 
 
 # Application definition
